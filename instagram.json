@@ -1,0 +1,318 @@
+{
+  "info": {
+    "_postman_id": "aa859116-4509-48c6-8375-164f725c3796",
+    "name": "instagram",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40144105",
+    "_collection_link": "https://go.postman.co/collection/40144105-aa859116-4509-48c6-8375-164f725c3796?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "client register",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "    pm.collectionVariables.set(\"token\",pm.response.json().token)\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"nomComplet\": \"{{$randomFullName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"password\": \"{{$randomPassword}}\",\r\n  \"telephone\": \"{{$randomPhoneNumber}}\",\r\n  \"fcm_token\": \"fcm_{{$randomInt}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/v1/register/client",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "v1",
+            "register",
+            "client"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "user by letter",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "\tpm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "let body_res = pm.response.json()\r",
+              "let users = body_res.data\r",
+              "pm.test(\"2 users found\",function(){\r",
+              "\tlet index1 = Math.floor(Math.random()*users.length)\r",
+              "\tpm.collectionVariables.set(\"user_id_1\",users[index1].id)\r",
+              "\r",
+              "\tlet index2 = Math.floor(Math.random()*users.length)\r",
+              "\twhile(index1===index2) \r",
+              "\t\tindex2 = Math.floor(Math.random()*users.length)\r",
+              "\tpm.collectionVariables.set(\"user_id_2\",users[index2].id)\r",
+              "\r",
+              "})\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let randomChar = String.fromCharCode(Math.floor(Math.random() * 26) + 97);\r",
+              "pm.collectionVariables.set(\"randomChar\", randomChar);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/v1/users/search?q={{randomChar}}&page=1",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "v1",
+            "users",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "{{randomChar}}"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "follow user 1",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/v1/users/{{user_id_1}}/follow",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "v1",
+            "users",
+            "{{user_id_1}}",
+            "follow"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "follow user 2",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/v1/users/{{user_id_2}}/follow",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "v1",
+            "users",
+            "{{user_id_2}}",
+            "follow"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "block",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/v1/users/{{user_id_1}}/bloquer",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "v1",
+            "users",
+            "{{user_id_1}}",
+            "bloquer"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "user_id_1",
+      "value": ""
+    },
+    {
+      "key": "user_id_2",
+      "value": ""
+    },
+    {
+      "key": "randomChar",
+      "value": ""
+    }
+  ]
+}
