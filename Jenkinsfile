@@ -31,7 +31,7 @@ pipeline {
                         sh 'newman run Toolshop.json'
                     }
 
-                    if (params.Product) {
+                    if (params.instagram) {
                         sh 'newman run instagram.json -e preprod.json'
                     }
 
