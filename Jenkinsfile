@@ -16,7 +16,7 @@ pipeline {
 
         booleanParam(
             name: 'instagram',
-            defaultValue: false,
+            defaultValue: true,
             description: 'Lancer la collection instagram.json'
         )
     }
