@@ -1,103 +1,14 @@
 {
   "info": {
-    "_postman_id": "fe058ba9-f628-4196-a8b1-b4979cfc83c5",
-    "name": "Toolshop API",
+    "_postman_id": "117e17d1-f5f5-43de-a298-0c6240781a1f",
+    "name": "categorie",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "40144105",
-    "_collection_link": "https://go.postman.co/collection/40144105-fe058ba9-f628-4196-a8b1-b4979cfc83c5?source=collection_link"
+    "_collection_link": "https://go.postman.co/collection/40144105-117e17d1-f5f5-43de-a298-0c6240781a1f?source=collection_link"
   },
   "item": [
     {
-      "name": "get all brands",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "//get response\r",
-              "let body_res=pm.response.json()\r",
-              "pm.test(\"Status code is 200\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
-              "});\r",
-              "\r",
-              "pm.test(\"verifier  si la list contient minium element\", function () {\r",
-              "  \r",
-              "    //je stock la liste  dans vairbale\r",
-              "    let list_brands=body_res\r",
-              "    let length=list_brands.length\r",
-              "    //assertion\r",
-              "    pm.expect(length).to.be.above(1)\r",
-              "});\r",
-              " pm.test(\"check if name [1] =ForgeFlex Tools\", function () {\r",
-              "     //valeur attendu\r",
-              "     let name_att=\"ForgeFlex Tools\"\r",
-              "     //name response\r",
-              "     let name_obt=body_res[1].name\r",
-              "     //assertion\r",
-              "     pm.expect(name_att).equal(name_obt)\r",
-              "});\r",
-              "\r",
-              "pm.test(\"check if name  ForgeFlex Tools dans la liste\", function () {\r",
-              "     //valeur attendu\r",
-              "     let name_att=\"ForgeFlex Tools\"\r",
-              "     let exist=checkElem(name_att,body_res)\r",
-              "     //assertion\r",
-              "     pm.expect(exist).to.be.true\r",
-              "});\r",
-              "\r",
-              "\r",
-              "function checkElem(name_att,list){\r",
-              "    let exist =false;\r",
-              "     for(let b of list){\r",
-              "        if(b.name===name_att)\r",
-              "        {\r",
-              "            exist=true;\r",
-              "            break;\r",
-              "        }\r",
-              "     }\r",
-              "     return exist\r",
-              "}\r",
-              "\r",
-              "\r",
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        },
-        {
-          "listen": "prerequest",
-          "script": {
-            "exec": [
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "https://api.practicesoftwaretesting.com/brands",
-          "protocol": "https",
-          "host": [
-            "api",
-            "practicesoftwaretesting",
-            "com"
-          ],
-          "path": [
-            "brands"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "creer brands",
+      "name": "add categorie",
       "event": [
         {
           "listen": "test",
@@ -107,24 +18,32 @@
               "    pm.response.to.have.status(201);\r",
               "});\r",
               "\r",
-              "pm.test(\"check if request body = response body \", function () {\r",
-              "    //body request\r",
-              "    let body_req=JSON.parse(pm.request.body.raw)\r",
-              "    let name_req=body_req.name;\r",
-              "    let slug_req=body_req.slug;\r",
-              "    //body response\r",
-              "    let body_res=pm.response.json()\r",
-              "    let name_res=body_res.name;\r",
-              "    let slug_res=body_res.slug;\r",
-              "    //assertion\r",
-              "    pm.expect(name_req).equal(name_res)\r",
-              "    pm.expect(slug_req).equal(slug_res)\r",
+              "let body_req = JSON.parse(pm.request.body.raw)\r",
+              "let name_req = body_req.name\r",
+              "let slug_req = body_req.slug\r",
               "\r",
-              "    let id_res=body_res.id\r",
-              "    pm.collectionVariables.set(\"id_brands\",id_res)\r",
-              "});\r",
+              "pm.collectionVariables.set(\"name_new\",name_req)\r",
+              "pm.collectionVariables.set(\"slug_new\",slug_req)\r",
               "\r",
-              ""
+              "\r",
+              "pm.test(\"check if request body = reponse body\" , () => {\r",
+              "\r",
+              "    //body response \r",
+              "\r",
+              "    let body_res = pm.response.json()\r",
+              "    let name_res = body_res.name \r",
+              "    let slug_res = body_res.slug\r",
+              "\r",
+              "    // assertion \r",
+              "    pm.expect(name_req).eql(name_res)\r",
+              "    pm.expect(slug_req).eql(slug_res)\r",
+              "\r",
+              "    let id_categorie = body_res.id\r",
+              "    pm.collectionVariables.set(\"id_categorie\",id_categorie)\r",
+              "\t\tpm.collectionVariables.set(\"name_new\",name_res)\r",
+              "\t\tpm.collectionVariables.set(\"slug_new\",slug_res)\r",
+              "\r",
+              "})"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -144,7 +63,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"name\": \"hocine\",\r\n  \"slug\": \"{{$randomFirstName}}\"\r\n}",
+          "raw": "{\r\n    \"name\": \"{{$randomProduct}}\",\r\n    \"slug\": \"{{$randomLoremSlug}}\",\r\n    \"parent_id\": null\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -152,124 +71,39 @@
           }
         },
         "url": {
-          "raw": "https://api.practicesoftwaretesting.com/brands",
-          "protocol": "https",
+          "raw": "{{base_url}}/categories",
           "host": [
-            "api",
-            "practicesoftwaretesting",
-            "com"
+            "{{base_url}}"
           ],
           "path": [
-            "brands"
+            "categories"
           ]
         }
       },
       "response": []
     },
     {
-      "name": "update brands",
+      "name": "get categorie by id",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
+              "let body_res = pm.response.json()\r",
               "pm.test(\"Status code is 200\", function () {\r",
               "    pm.response.to.have.status(200);\r",
               "});\r",
+              "pm.test(\"is the result correct\", function() {\r",
               "\r",
-              "pm.test(\"check if success = true\", function () {\r",
-              "        //valeur attendu = true\r",
-              "        let succes_att=true;\r",
-              "        //reponse body \r",
-              "        let body_res=pm.response.json()\r",
-              "        let success_res=body_res.success \r",
+              "    let name_res = body_res.name\r",
+              "    let slug_res = body_res.slug\r",
               "\r",
-              "        //assertion\r",
-              "        //methode 1\r",
-              "        pm.expect(succes_att).equal(success_res)\r",
-              "        //methode 2\r",
-              "        pm.expect(success_res).to.be.true\r",
-              "    });\r",
+              "    let name_att = pm.collectionVariables.get(\"name_new\")\r",
+              "    let slug_att = pm.collectionVariables.get(\"slug_new\")\r",
               "\r",
-              "\r",
-              "pm.test(\"save body request\", function () {\r",
-              "    //body request de upadte\r",
-              "    let body_req=JSON.parse(pm.request.body.raw)\r",
-              "    let name_req_update = body_req.name;\r",
-              "    let slug_req_update = body_req.slug;\r",
-              "    pm.collectionVariables.set(\"name_update\",name_req_update)\r",
-              "    pm.collectionVariables.set(\"slug_update\",slug_req_update)\r",
-              "\r",
-              "\r",
-              " });"
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        },
-        {
-          "listen": "prerequest",
-          "script": {
-            "exec": [
-              ""
-            ],
-            "type": "text/javascript",
-            "packages": {},
-            "requests": {}
-          }
-        }
-      ],
-      "request": {
-        "method": "PUT",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n  \"name\": \"hocine\",\r\n  \"slug\": \"{{$randomLoremSlug}}\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": {
-          "raw": "https://api.practicesoftwaretesting.com/brands/{{id_brands}}",
-          "protocol": "https",
-          "host": [
-            "api",
-            "practicesoftwaretesting",
-            "com"
-          ],
-          "path": [
-            "brands",
-            "{{id_brands}}"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
-      "name": "get by id",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "pm.test(\"Status code is 200\", function () {\r",
-              "    pm.response.to.have.status(200);\r",
-              "});\r",
-              "\r",
-              "pm.test(\"check response get with request update brands \", function () {\r",
-              "     let name_update=pm.collectionVariables.get(\"name_update\")\r",
-              "     let slug_update=pm.collectionVariables.get(\"slug_update\")\r",
-              "     let body_res=pm.response.json()\r",
-              "     let name_res=body_res.name;\r",
-              "     let slug_res=body_res.slug;\r",
-              "     //assertion\r",
-              "     pm.expect(name_update).equal(name_res)\r",
-              "     pm.expect(slug_update).equal(slug_res)\r",
-              "\r",
-              "});"
+              "    pm.expect(name_att).eql(name_res)\r",
+              "    pm.expect(slug_att).eql(slug_res)\r",
+              "    })"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -288,33 +122,177 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://api.practicesoftwaretesting.com/brands/{{id_brands}}",
-          "protocol": "https",
+          "raw": "{{base_url}}/categories/tree/{{id_categorie}}",
           "host": [
-            "api",
-            "practicesoftwaretesting",
-            "com"
+            "{{base_url}}"
           ],
           "path": [
-            "brands",
-            "{{id_brands}}"
+            "categories",
+            "tree",
+            "{{id_categorie}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get all categories",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/categories",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "categories"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "all categories with subcategories",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/categories/tree",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "categories",
+            "tree"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Search by name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/categories/search?q=name?Hammer",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "categories",
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "name?Hammer"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update categorie",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "let body_req = JSON.parse(pm.request.body.raw)\r",
+              "let name_req = body_req.name\r",
+              "let slug_req = body_req.slug\r",
+              "\r",
+              "pm.collectionVariables.set(\"name_new\",name_req)\r",
+              "pm.collectionVariables.set(\"slug_new\",slug_req)\r",
+              "\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"{{$randomProduct}}\",\r\n    \"slug\": \"{{$randomLoremSlug}}\",\r\n    \"parent_id\": null\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/categories/{{id_categorie}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "categories",
+            "{{id_categorie}}"
           ]
         }
       },
       "response": []
     }
   ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
   "variable": [
     {
-      "key": "id_brands",
+      "key": "base_url",
       "value": ""
     },
     {
-      "key": "name_update",
+      "key": "name_new",
       "value": ""
     },
     {
-      "key": "slug_update",
+      "key": "slug_new",
+      "value": ""
+    },
+    {
+      "key": "id_categorie",
       "value": ""
     }
   ]
