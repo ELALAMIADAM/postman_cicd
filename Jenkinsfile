@@ -28,7 +28,7 @@ pipeline {
                 script {
 
                     if (params.Toolshop) {
-                        sh 'newman run Toolshop.json'
+                        sh 'newman run Toolshop.json -e preprod.json'
                     }
 
                     if (params.instagram) {
