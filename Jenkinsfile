@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'postman/newman:latest'
+            image 'pottee/newman_allure:latest'
             args '-u root --entrypoint='
         }
     }
@@ -38,15 +38,18 @@ pipeline {
                 script {
                     sh 'mkdir -p allure-results'
                     if(params.ALLURE){
-                        sh 'npx newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir allure-results'
+                        
+                        sh 'npx newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir output/allure-results '
                         stash name: 'allure-results', includes: 'allure-results/*'
                     }
+
                     else{
                         sh 'newman run instagram.json -e preprod.json'
+                        }
                     }
+
                 }
-    }
-}
+            }
         }
     post{
         always{
