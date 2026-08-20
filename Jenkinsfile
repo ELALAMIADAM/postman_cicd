@@ -2,65 +2,66 @@ pipeline {
     agent {
         docker {
             image 'postman/newman:latest'
-            args '-u root --entrypoint='
+            args '-u root --entrypoint=/bin/sh'
         }
     }
 
     parameters {
-
-        booleanParam(
-            name: 'Toolshop',
-            defaultValue: true,
-            description: 'Lancer la collection Toolshop.json'
-        )
-
-        booleanParam(
-            name: 'instagram',
-            defaultValue: true,
-            description: 'Lancer la collection instagram.json'
-        )
-        booleanParam(
-            name: 'Social',
-            defaultValue: true,
-            description: 'Lancer la collection Social.json'
-        )
+        booleanParam(name:'ALLURE', defaultValue: false, description: 'generation de rapport allure')
+    }
+    tools {
+        allure 'allure'
     }
 
     stages {
-        // stage("installation des dependances"){
-        //     steps {
-        //         script {
+        stage('install deps'){
+                    steps{
+                        sh 'npm ci || true'
+                    }
+                }
+        stage('clean allure results'){
                     
-        //             sh 'npm install -g newman-reporter-allure'
-                    
-        //             sh 'npm install -g allure-commandline'
-        //         }
-        //     }
-        // }
+                    steps{
+                        sh '''
+                            echo "Suppression du cache Allure..."
+                            rm -rf allure-results
+                            mkdir -p allure-results
+                            echo "Dossier allure-results nettoyé avec succès"
+                        '''
+                    }
+                }
 
         stage('Lancer les tests') {
             steps {
                 script {
                     sh 'mkdir -p allure-results'
-
-                    if (params.Toolshop) {
-                        sh 'newman run Toolshop.json -e preprod.json'
+                    if(params.ALLURE){
+                        sh 'newman run instagram.json -e preprod.json -r allure'
+                        stash name: 'allure-results', includes: 'allure-results/*'
                     }
 
-                    if (params.instagram) {
+                    else{
                         sh 'newman run instagram.json -e preprod.json'
-                    }
-
-                    if (params.Social) {
-                        sh 'newman run Social.json -e preprod.json'
+                        }
                     }
 
                 }
             }
         }
-
+    post{
+        always{
+            script{
+                if(params.ALLURE){
+                    unstash 'allure-results'
+                    archiveArtifacts 'allure-results/*'
+                    allure includeProperties: false,
+                           jdk: '',
+                           results: [[path: 'allure-results/']]
+                }
+            }
+        }
+    }
     }
     
 
-}
 
