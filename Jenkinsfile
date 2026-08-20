@@ -9,9 +9,6 @@ pipeline {
     parameters {
         booleanParam(name:'ALLURE', defaultValue: false, description: 'generation de rapport allure')
     }
-    tools {
-        allure 'allure'
-    }
 
     stages {
         stage('install deps'){
@@ -39,7 +36,7 @@ pipeline {
                     sh 'mkdir -p allure-results'
                     if(params.ALLURE){
                         
-                        sh 'npx newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir output/allure-results '
+                        sh 'newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir allure-results'
                         stash name: 'allure-results', includes: 'allure-results/*'
                     }
 
