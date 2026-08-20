@@ -54,7 +54,7 @@ pipeline {
                     if (params.Social) {
                         sh 'newman run Social.json -e preprod.json -r allure'
                     }
-
+                    stash name: 'allure-results', includes: 'allure-results/*'
                 }
             }
         }
