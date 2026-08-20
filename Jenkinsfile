@@ -16,10 +16,8 @@ pipeline {
     stages {
         stage('install deps'){
                     steps{
-                        sh 'npm ci'
-                        sh 'npm install -g newman-reporter-allure'
-                        sh 'npm install -g newman '
-                        sh'npm install --save-dev newman-reporter-allure '
+                        sh 'npm ci '
+                        sh 'npm install --save-dev newman-reporter-allure '
                         
                     }
                 }
@@ -34,24 +32,21 @@ pipeline {
                         '''
                     }
                 }
-
+        
         stage('Lancer les tests') {
             steps {
                 script {
                     sh 'mkdir -p allure-results'
                     if(params.ALLURE){
-                        
-                        sh 'npx newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir output/allure-results '
+                        sh 'npx newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir allure-results'
                         stash name: 'allure-results', includes: 'allure-results/*'
                     }
-
                     else{
                         sh 'newman run instagram.json -e preprod.json'
-                        }
                     }
-
                 }
-            }
+    }
+}
         }
     post{
         always{
