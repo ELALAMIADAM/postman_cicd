@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'pottee/newman_allure:latest'
+            image 'postman/newman:latest'
             args '-u root --entrypoint='
         }
     }
