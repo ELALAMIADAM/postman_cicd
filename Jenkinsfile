@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'postman/newman:6-alpine'
+            image 'postman/newman:latest'
             args '-u root --entrypoint='
         }
     }
@@ -13,7 +13,8 @@ pipeline {
     stages {
         stage('install deps'){
                     steps{
-                        sh 'npm ci '
+                        
+                        sh 'npm install '
                         sh 'npm install -g --save-dev newman-reporter-allure '
                         
                     }
