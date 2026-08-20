@@ -144,8 +144,12 @@
         {
           "listen": "prerequest",
           "script": {
-            "exec": [],
-            "type": "text/javascript"
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
           }
         }
       ],
@@ -154,7 +158,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n  \"even_id\": {{event_id}},\r\n  \"titre\": \"{{titre}}\",\r\n  \"contenu\": \"Rendez-vous à 20h devant la salle\"\r\n}",
+          "raw": "{\r\n  \"even_id\": \"{{event_id}}\",\r\n  \"titre\": \"{{titre}}\",\r\n  \"contenu\": \"Rendez-vous à 20h devant la salle\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -242,7 +246,9 @@
             "exec": [
               "pm.test(\"Status code is 201\", function () {\r",
               "    pm.response.to.have.status(201);\r",
-              "});"
+              "});\r",
+              "\r",
+              ""
             ],
             "type": "text/javascript",
             "packages": {},
@@ -359,7 +365,19 @@
             "exec": [
               "pm.test(\"Status code is 200\", function () {\r",
               "    pm.response.to.have.status(200);\r",
-              "});"
+              "});\r",
+              "\r",
+              "pm.test(\"total = 2\" , () => {\r",
+              "\r",
+              "    //body response \r",
+              "\r",
+              "\r",
+              "    let body_res = pm.response.json() \r",
+              "\r",
+              "    // assertion \r",
+              "    pm.expect(body_res.total).eql(2)\r",
+              "\r",
+              "})"
             ],
             "type": "text/javascript",
             "packages": {},
