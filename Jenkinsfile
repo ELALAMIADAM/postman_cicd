@@ -7,11 +7,13 @@ pipeline {
     }
 
     parameters {
+
         booleanParam(
             name: 'Toolshop',
             defaultValue: true,
             description: 'Lancer la collection Toolshop.json'
         )
+
         booleanParam(
             name: 'instagram',
             defaultValue: true,
@@ -25,55 +27,65 @@ pipeline {
     }
 
     stages {
-        stage('Vérifier les fichiers') {
+        stage("installation des dependances"){
             steps {
-                sh 'echo "Fichiers dans le workspace:"'
-                sh 'ls -la *.json || echo "Aucun fichier JSON trouvé"'
+                script {
+                    
+                    sh 'npm install -g newman-reporter-allure'
+                    
+                    sh 'npm install -g allure-commandline'
+                }
             }
         }
 
         stage('Lancer les tests') {
             steps {
                 script {
-                    def testResults = []
-                    
+                    sh 'mkdir -p allure-results'
+
                     if (params.Toolshop) {
-                        echo "Exécution de Toolshop..."
-                        sh 'newman run Toolshop.json -e preprod.json --reporters cli'
-                        testResults.add('Toolshop: PASSED')
+                        sh 'newman run Toolshop.json -e preprod.json -r allure'
                     }
 
                     if (params.instagram) {
-                        echo "Exécution de instagram..."
-                        sh 'newman run instagram.json -e preprod.json --reporters cli'
-                        testResults.add('instagram: PASSED')
+                        sh 'newman run instagram.json -e preprod.json -r allure'
                     }
 
                     if (params.Social) {
-                        echo "Exécution de Social..."
-                        sh 'newman run Social.json -e preprod.json --reporters cli'
-                        testResults.add('Social: PASSED')
+                        sh 'newman run Social.json -e preprod.json -r allure'
                     }
 
-                    // Afficher le résumé
-                    echo "=== RÉSUMÉ DES TESTS ==="
-                    testResults.each { result ->
-                        echo result
-                    }
                 }
             }
         }
+         stage('Generate Allure Report') {
+            steps {
+                script {
+                    sh 'allure generate allure-results --clean -o allure-report'
+                }
+            }
     }
-
     post {
         always {
-            echo "Pipeline terminé"
-        }
-        failure {
-            echo "Des tests ont échoué"
+            script {
+                allure([
+                    includeProperties: false,
+                    jdk: '',
+                    properties: [],
+                    reportBuildPolicy: 'ALWAYS',
+                    results: [[path: 'allure-results']]
+                ])
+            }
         }
         success {
-            echo "Tous les tests ont réussi !"
+            script {
+                echo 'Allure report generated successfully!'
+            }
+        }
+        cleanup {
+            script {
+                sh 'rm -rf allure-results allure-report'
+            }
         }
     }
 }
