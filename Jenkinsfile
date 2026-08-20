@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'postman/newman:latest'
+            image 'postman/newman:6-alpine'
             args '-u root --entrypoint='
         }
     }
@@ -37,7 +37,7 @@ pipeline {
                     if(params.ALLURE){
                         
                         sh 'newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir allure-results'
-                        stash name: 'allure-results', includes: 'allure-results/*'
+                        // stash name: 'allure-results', includes: 'allure-results/*'
                     }
 
                     else{
@@ -53,7 +53,7 @@ pipeline {
             script{
                 if(params.ALLURE){
                     // unstash 'allure-results'
-                    archiveArtifacts 'allure-results/*', allowEmptyArchive :true
+                    archiveArtifacts 'allure-results/*', allowEmptyArchive: true
                     allure includeProperties: false,
                            jdk: '',
                            results: [[path: 'allure-results/']]
