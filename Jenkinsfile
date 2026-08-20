@@ -36,7 +36,8 @@ pipeline {
                 script {
                     sh 'mkdir -p allure-results'
                     if(params.ALLURE){
-                        sh 'newman run instagram.json -e preprod.json -r allure-results'
+                        
+                        sh 'npx newman run instagram.json -e environment.json --reporters cli,allure --reporter-allure-resultsDir output/allure-results '
                         stash name: 'allure-results', includes: 'allure-results/*'
                     }
 
