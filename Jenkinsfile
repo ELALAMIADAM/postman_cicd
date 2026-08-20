@@ -14,7 +14,7 @@ pipeline {
         stage('install deps'){
                     steps{
                         sh 'npm ci '
-                        sh 'npm install --save-dev newman-reporter-allure '
+                        sh 'npm install -g --save-dev newman-reporter-allure '
                         
                     }
                 }
@@ -37,7 +37,7 @@ pipeline {
                     if(params.ALLURE){
                         
                         sh 'newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir allure-results'
-                        // stash name: 'allure-results', includes: 'allure-results/*'
+                        stash name: 'allure-results', includes: 'allure-results/*'
                     }
 
                     else{
@@ -52,8 +52,8 @@ pipeline {
         always{
             script{
                 if(params.ALLURE){
-                    unstash 'allure-results'
-                    archiveArtifacts 'allure-results/*'
+                    // unstash 'allure-results'
+                    archiveArtifacts 'allure-results/*', allowEmptyArchive :true
                     allure includeProperties: false,
                            jdk: '',
                            results: [[path: 'allure-results/']]
