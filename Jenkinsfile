@@ -19,6 +19,11 @@ pipeline {
             defaultValue: true,
             description: 'Lancer la collection instagram.json'
         )
+        booleanParam(
+            name: 'Social',
+            defaultValue: true,
+            description: 'Lancer la collection Social.json'
+        )
     }
 
     stages {
@@ -33,6 +38,10 @@ pipeline {
 
                     if (params.instagram) {
                         sh 'newman run instagram.json -e preprod.json'
+                    }
+
+                    if (params.Social) {
+                        sh 'newman run Social.json -e preprod.json'
                     }
 
                 }
