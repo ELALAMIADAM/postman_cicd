@@ -64,6 +64,7 @@ pipeline {
                     sh 'allure generate allure-results --clean -o allure-report'
                 }
             }
+        }
     }
     post {
         always {
@@ -88,5 +89,6 @@ pipeline {
             }
         }
     }
+
 }
-}
+
