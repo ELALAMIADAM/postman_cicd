@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'postman/newman:latest'
-            args '-u root --entrypoint=/bin/sh'
+            args '-u root --entrypoint='
         }
     }
 
