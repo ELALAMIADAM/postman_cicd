@@ -61,31 +61,19 @@ pipeline {
          stage('Generate Allure Report') {
             steps {
                 script {
-                    sh 'allure generate allure-results --clean -o allure-report'
+                    sh 'allure generate allure-results -o allure-report'
                 }
             }
         }
     }
     post {
-        always {
-            script {
-                allure([
-                    includeProperties: false,
-                    jdk: '',
-                    properties: [],
-                    reportBuildPolicy: 'ALWAYS',
-                    results: [[path: 'allure-results']]
-                ])
-            }
-        }
-        success {
-            script {
-                echo 'Allure report generated successfully!'
-            }
-        }
-        cleanup {
-            script {
-                sh 'rm -rf allure-results allure-report'
+        always{
+            script{
+                    unstash 'allure-results'
+                    archiveArtifacts 'allure-results/*'
+                    allure includeProperties: false,
+                           jdk: '',
+                           results: [[path: 'allure-results/']]
             }
         }
     }
