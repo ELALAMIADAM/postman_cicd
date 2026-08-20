@@ -16,7 +16,8 @@ pipeline {
     stages {
         stage('install deps'){
                     steps{
-                        sh 'npm ci || true'
+                        sh 'npm ci '
+                        sh'npm install --save-dev newman-reporter-allure '
                     }
                 }
         stage('clean allure results'){
