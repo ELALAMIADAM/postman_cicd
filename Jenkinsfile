@@ -1,25 +1,25 @@
 pipeline {
-    agent {
-        docker {
-            image 'postman/newman:latest'
-            args '-u root --entrypoint='
-        }
-    }
+    agent any
 
-    parameters {
-        booleanParam(name:'ALLURE', defaultValue: false, description: 'generation de rapport allure')
-    }
+      stages{
 
-    stages {
-        stage('install deps'){
+        stage('global stage'){
+            
+            agent{
+                docker{
+                    image 'postman/newman:latest'
+                    args '-u root --entrypoint='
+                }
+            }
+            
+            stages{
+                stage('install allure'){
                     steps{
-                        
-                        sh 'npm install '
-                        sh 'npm install -g --save-dev newman-reporter-allure '
-                        
+                        sh 'npm install --save-dev newman-reporter-allure'
                     }
                 }
-        stage('clean allure results'){
+
+                stage('clean allure results'){
                     
                     steps{
                         sh '''
@@ -31,38 +31,25 @@ pipeline {
                     }
                 }
         
-        stage('Lancer les tests') {
-            steps {
-                script {
-                    sh 'mkdir -p allure-results'
-                    if(params.ALLURE){
-                        
-                        sh 'newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir allure-results'
-                        // stash name: 'allure-results', includes: 'allure-results/*'
-                    }
-
-                    else{
-                        sh 'newman run instagram.json -e preprod.json'
-                        }
-                    }
-
-                }
-            }
-        }
-    post{
-        always{
-            script{
-                if(params.ALLURE){
-                    // unstash 'allure-results'
-                    archiveArtifacts 'allure-results/*', allowEmptyArchive: true
-                    allure includeProperties: false,
-                           jdk: '',
-                           results: [[path: 'allure-results/']]
+                stage('run avec new man'){
+                    steps {
+                    
+                        sh 'newman run collection.json -e env.json --reporters cli,allure --reporter-allure-resultsDir allure-results'
+                    
+                
+                             }
                 }
             }
         }
     }
+
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'allure-results/*', allowEmptyArchive: true
+            allure includeProperties: false,
+                   jdk: '',
+                   results: [[path: 'allure-results/']]
+        }
     }
-    
-
-
+} 
