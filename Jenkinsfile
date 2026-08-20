@@ -37,7 +37,7 @@ pipeline {
                     if(params.ALLURE){
                         
                         sh 'newman run instagram.json -e preprod.json --reporters cli,allure --reporter-allure-resultsDir allure-results'
-                        stash name: 'allure-results', includes: 'allure-results/*'
+                        // stash name: 'allure-results', includes: 'allure-results/*'
                     }
 
                     else{
