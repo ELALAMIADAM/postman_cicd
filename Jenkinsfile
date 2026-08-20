@@ -27,16 +27,16 @@ pipeline {
     }
 
     stages {
-        stage("installation des dependances"){
-            steps {
-                script {
+        // stage("installation des dependances"){
+        //     steps {
+        //         script {
                     
-                    sh 'npm install -g newman-reporter-allure'
+        //             sh 'npm install -g newman-reporter-allure'
                     
-                    sh 'npm install -g allure-commandline'
-                }
-            }
-        }
+        //             sh 'npm install -g allure-commandline'
+        //         }
+        //     }
+        // }
 
         stage('Lancer les tests') {
             steps {
@@ -44,39 +44,23 @@ pipeline {
                     sh 'mkdir -p allure-results'
 
                     if (params.Toolshop) {
-                        sh 'newman run Toolshop.json -e preprod.json -r allure'
+                        sh 'newman run Toolshop.json -e preprod.json'
                     }
 
                     if (params.instagram) {
-                        sh 'newman run instagram.json -e preprod.json -r allure'
+                        sh 'newman run instagram.json -e preprod.json'
                     }
 
                     if (params.Social) {
-                        sh 'newman run Social.json -e preprod.json -r allure'
+                        sh 'newman run Social.json -e preprod.json'
                     }
-                    stash name: 'allure-results', includes: 'allure-results/*'
+
                 }
             }
         }
-         stage('Generate Allure Report') {
-            steps {
-                script {
-                    sh 'allure generate allure-results -o allure-report'
-                }
-            }
-        }
+
     }
-    post {
-        always{
-            script{
-                    unstash 'allure-results'
-                    archiveArtifacts 'allure-results/*'
-                    allure includeProperties: false,
-                           jdk: '',
-                           results: [[path: 'allure-results/']]
-            }
-        }
-    }
+    
 
 }
 
