@@ -154,6 +154,16 @@
         }
       ],
       "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token_1}}",
+              "type": "string"
+            }
+          ]
+        },
         "method": "POST",
         "header": [],
         "body": {
@@ -166,11 +176,17 @@
           }
         },
         "url": {
-          "raw": "{{url}}/v1/posts/share-event",
+          "raw": "https://preprod.thrundrz.fr/backendpublic/public/api/v1/posts/share-event",
+          "protocol": "https",
           "host": [
-            "{{url}}"
+            "preprod",
+            "thrundrz",
+            "fr"
           ],
           "path": [
+            "backendpublic",
+            "public",
+            "api",
             "v1",
             "posts",
             "share-event"
